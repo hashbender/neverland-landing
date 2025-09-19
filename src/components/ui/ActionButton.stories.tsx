@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    text: 'Enter DApp',
+    text: 'Enter App',
     showStars: true,
     showStardust: true,
   },

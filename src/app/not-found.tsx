@@ -71,9 +71,13 @@ export default function NotFound() {
               </button>
 
               {/* Enter App Button with Stars and Stardust */}
-              <Link href='/'>
+              <Link
+                href='https://testnet.neverland.money/'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 <ActionButton
-                  text='Soon'
+                  text='Enter App'
                   className='mx-auto w-[240px]'
                   buttonName='enter_app'
                   buttonLocation='404_page'

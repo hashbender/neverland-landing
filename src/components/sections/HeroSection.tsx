@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import ActionButton from '@/components/ui/ActionButton';
 import StarrySky from '@/components/ui/StarrySky';
 import StatsCard from '@/components/ui/StatsCard';
@@ -130,12 +132,19 @@ export default function HeroSection() {
             </div>
 
             {/* CTA Button */}
-            <ActionButton
-              text='Soon'
+            <Link
+              href='https://testnet.neverland.money/'
+              target='_blank'
+              rel='noopener noreferrer'
               className='w-[240px] md:mx-0 md:mr-auto'
-              buttonName='enter_dapp'
-              buttonLocation='hero_section'
-            />
+            >
+              <ActionButton
+                text='Enter App'
+                className='w-full'
+                buttonName='enter_app'
+                buttonLocation='hero_section'
+              />
+            </Link>
           </div>
         </div>
       </div>

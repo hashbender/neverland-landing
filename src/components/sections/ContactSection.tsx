@@ -41,12 +41,18 @@ export default function ContactSection() {
 
           {/* CTA Button */}
           <FadeInWhenVisible delay={0} y={20}>
-            <ActionButton
-              text='Soon'
-              className='mx-auto w-[240px]'
-              buttonName='enter_dapp'
-              buttonLocation='footer'
-            />
+            <Link
+              href='https://testnet.neverland.money/'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <ActionButton
+                text='Enter App'
+                className='mx-auto w-[240px]'
+                buttonName='enter_app'
+                buttonLocation='footer'
+              />
+            </Link>
           </FadeInWhenVisible>
         </div>
       </div>
