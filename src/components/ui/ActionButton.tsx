@@ -116,7 +116,7 @@ export default function ActionButton({
 
         {/* Button content */}
         {children || (
-          <span className='font-inter text-center text-base leading-[110%] font-medium text-white'>
+          <span className='font-cinzel text-center text-base leading-[110%] font-bold text-white/90'>
             {text}
           </span>
         )}
