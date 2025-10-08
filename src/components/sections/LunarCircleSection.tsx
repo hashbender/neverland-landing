@@ -4,8 +4,19 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 import { BlurredLoadingText } from '@/components/ui/BlurredLoadingText';
+import { useTvlContext, formatTvl } from '@/lib/TvlContext';
+import { useUserbaseContext, formatNumber } from '@/lib/UserbaseContext';
 
 export default function LunarCircleSection() {
+  const { data: tvlData, loading: tvlLoading } = useTvlContext();
+  const { data, loading } = useUserbaseContext();
+  const activeUsers = data?.totalUsers
+    ? formatNumber(data.totalUsers)
+    : '000,000';
+  const monthlyTransactions = data?.transactionsPerMonth
+    ? formatNumber(data.transactionsPerMonth)
+    : '00,000';
+  const tvlValue = tvlData?.tvl ? `$${formatTvl(tvlData.tvl)}` : '$000M';
   return (
     <section
       id='stats'
@@ -44,26 +55,29 @@ export default function LunarCircleSection() {
                 className='flex w-full flex-col items-start gap-2 px-4'
               >
                 <div className='font-cinzel text-3xl leading-[110%] font-normal text-white'>
-                  <BlurredLoadingText text='$000M' />
+                  <BlurredLoadingText text={tvlValue} isLoading={tvlLoading} />
                 </div>
                 <div className='font-cinzel text-sm leading-[110%] font-normal text-white/60 uppercase'>
                   &#123; TOTAL VALUE LOCKED &#125;
                 </div>
               </motion.div>
 
-              {/* Monthly Revenue - Right aligned */}
+              {/* Monthly Transactions - Right aligned */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 1 }}
-                transition={{ duration: 0.8, delay: 1.3 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
                 className='flex w-full flex-col items-end gap-2 px-4'
               >
                 <div className='font-cinzel text-3xl leading-[110%] font-normal text-white'>
-                  <BlurredLoadingText text='$00.0M' />
+                  <BlurredLoadingText
+                    text={monthlyTransactions}
+                    isLoading={loading}
+                  />
                 </div>
                 <div className='font-cinzel text-sm leading-[110%] font-normal text-white/60 uppercase'>
-                  &#123; MONTHLY REVENUE &#125;
+                  &#123; MONTHLY TRANSACTIONS &#125;
                 </div>
               </motion.div>
             </div>
@@ -299,7 +313,7 @@ export default function LunarCircleSection() {
                 className='flex w-full flex-col items-start gap-2 px-4'
               >
                 <div className='font-cinzel text-3xl leading-[110%] font-normal text-white'>
-                  <BlurredLoadingText text='000,000' />
+                  <BlurredLoadingText text={activeUsers} isLoading={loading} />
                 </div>
                 <div className='font-cinzel text-sm leading-[110%] font-normal text-white/60 uppercase'>
                   &#123; ACTIVE USERS &#125;
@@ -575,7 +589,10 @@ export default function LunarCircleSection() {
                 {/* Total Value Locked */}
                 <div className='flex w-[120px] flex-col items-center gap-2 md:w-[158px] md:items-start md:gap-3'>
                   <div className='font-cinzel mt-[-1px] text-3xl leading-[110%] font-normal text-white md:w-[158px] md:text-left md:text-5xl'>
-                    <BlurredLoadingText text='$000M' />
+                    <BlurredLoadingText
+                      text={tvlValue}
+                      isLoading={tvlLoading}
+                    />
                   </div>
                   <div className='relative h-8 w-full md:h-10'>
                     <div className='font-cinzel absolute top-0 left-0 h-[16px] w-full text-lg leading-[110%] font-normal text-white/60 uppercase md:h-[18px]'>
@@ -590,7 +607,10 @@ export default function LunarCircleSection() {
                 {/* Transactions */}
                 <div className='flex w-[120px] flex-col items-center gap-2 md:w-[158px] md:items-start md:gap-3'>
                   <div className='font-cinzel mt-[-1px] text-3xl leading-[110%] font-normal text-white md:w-[158px] md:text-left md:text-5xl'>
-                    <BlurredLoadingText text='00.00M' />
+                    <BlurredLoadingText
+                      text={monthlyTransactions}
+                      isLoading={loading}
+                    />
                   </div>
                   <div className='relative h-8 w-full px-0.5 md:h-10'>
                     <div className='font-cinzel absolute top-0 left-0.5 h-4 w-[114px] text-lg leading-[110%] font-normal text-white/60 uppercase md:h-5 md:w-[158px]'>
@@ -629,7 +649,10 @@ export default function LunarCircleSection() {
                 {/* Active Users */}
                 <div className='flex w-[120px] flex-col items-center gap-2 md:w-[158px] md:items-start md:gap-3'>
                   <div className='font-cinzel mt-[-1px] text-3xl leading-[110%] font-normal text-white md:w-[158px] md:text-left md:text-5xl'>
-                    <BlurredLoadingText text='000,000' />
+                    <BlurredLoadingText
+                      text={activeUsers}
+                      isLoading={loading}
+                    />
                   </div>
                   <div className='flex flex-col items-center gap-0 md:relative md:h-10 md:w-full md:items-start'>
                     <div className='font-cinzel text-lg leading-[110%] font-normal text-white/60 uppercase md:absolute md:top-0 md:left-0 md:h-[16px] md:w-full'>

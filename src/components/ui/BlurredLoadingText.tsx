@@ -6,13 +6,19 @@ interface BlurredLoadingTextProps {
   text: string;
   className?: string;
   duration?: number;
+  isLoading?: boolean;
 }
 
 export const BlurredLoadingText = ({
   text,
   className = '',
   duration = 1.8,
+  isLoading = true,
 }: BlurredLoadingTextProps) => {
+  if (!isLoading) {
+    return <span className={className}>{text}</span>;
+  }
+
   return (
     <motion.span
       className={className}

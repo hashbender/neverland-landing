@@ -9,6 +9,7 @@ export interface StatsCardProps {
   tooltipContent: string;
   className?: string;
   isMobile?: boolean;
+  isLoading?: boolean;
 }
 
 export default function StatsCard({
@@ -17,6 +18,7 @@ export default function StatsCard({
   tooltipContent,
   className = '',
   isMobile = false,
+  isLoading = false,
 }: StatsCardProps) {
   if (isMobile) {
     return (
@@ -26,6 +28,7 @@ export default function StatsCard({
         <BlurredLoadingText
           text={value}
           className='font-cinzel w-full text-center text-[28px] leading-[110%] font-normal text-white md:text-[40px]'
+          isLoading={isLoading}
         />
         <div className='font-cinzel w-full text-sm leading-[110%] font-normal text-[#ead5ff] uppercase'>
           <div className='flex w-full justify-between'>
@@ -79,6 +82,7 @@ export default function StatsCard({
           <BlurredLoadingText
             text={value}
             className='font-cinzel text-[28px] leading-[110%] font-normal text-white md:text-[40px]'
+            isLoading={isLoading}
           />
         </div>
       </div>

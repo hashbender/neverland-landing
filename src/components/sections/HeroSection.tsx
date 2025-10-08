@@ -5,8 +5,17 @@ import Link from 'next/link';
 import ActionButton from '@/components/ui/ActionButton';
 import StarrySky from '@/components/ui/StarrySky';
 import StatsCard from '@/components/ui/StatsCard';
+import { useTvlContext, formatTvl } from '@/lib/TvlContext';
+import { useUserbaseContext, formatNumber } from '@/lib/UserbaseContext';
 
 export default function HeroSection() {
+  const { data: tvlData, loading: tvlLoading } = useTvlContext();
+  const { data, loading } = useUserbaseContext();
+  const activeUsers = data?.totalUsers
+    ? formatNumber(data.totalUsers)
+    : '000,000';
+  const tvlValue = tvlData?.tvl ? `$${formatTvl(tvlData.tvl)}` : '$000.00M';
+
   return (
     <div className='relative flex h-[100vh] max-h-[1000px] min-h-[700px] w-full flex-col overflow-hidden bg-[#01020D] md:max-h-[100vh] md:min-h-[944px]'>
       {/* Starry sky background */}
@@ -153,17 +162,19 @@ export default function HeroSection() {
         {/* Total Value Locked Card - Desktop version */}
         <StatsCard
           title='Total Value Locked'
-          value='000.00M'
+          value={tvlValue}
           tooltipContent='Total value of deposited assets in the protocol.'
           className='hidden md:block'
+          isLoading={tvlLoading}
         />
 
         {/* Active Users Card - Desktop version */}
         <StatsCard
           title='Active Users'
-          value='900,000'
+          value={activeUsers}
           tooltipContent='Number of users interacting with the protocol.'
           className='hidden md:block'
+          isLoading={loading}
         />
 
         {/* Mobile Stats Layout - Fixed to bottom of viewport */}
@@ -171,17 +182,19 @@ export default function HeroSection() {
           {/* Total Value Locked */}
           <StatsCard
             title='TOTAL VALUE LOCKED'
-            value='$000.00M'
+            value={tvlValue}
             tooltipContent='Total value of deposited assets in the protocol.'
             isMobile={true}
+            isLoading={tvlLoading}
           />
 
           {/* Active Users */}
           <StatsCard
             title='ACTIVE USERS'
-            value='900,000'
+            value={activeUsers}
             tooltipContent='Number of users interacting with the protocol.'
             isMobile={true}
+            isLoading={loading}
           />
         </div>
       </div>

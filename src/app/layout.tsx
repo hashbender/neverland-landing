@@ -13,6 +13,8 @@ import {
 } from 'next/font/google';
 
 import SmoothScroll from '@/components/SmoothScroll';
+import { TvlProvider } from '@/lib/TvlContext';
+import { UserbaseProvider } from '@/lib/UserbaseContext';
 import './globals.css';
 
 const merriweather = Merriweather({
@@ -123,11 +125,15 @@ export default function RootLayout({
       <body
         className={`${merriweather.variable} ${cinzel.variable} ${cinzel_decorative.variable} ${inter.variable} ${geistSans.variable} ${geistMono.variable} ${lexend.variable} ${quicksand.variable} bg-black text-white antialiased`}
       >
-        <SmoothScroll>
-          {children}
-          <SpeedInsights />
-          <Analytics />
-        </SmoothScroll>
+        <TvlProvider>
+          <UserbaseProvider>
+            <SmoothScroll>
+              {children}
+              <SpeedInsights />
+              <Analytics />
+            </SmoothScroll>
+          </UserbaseProvider>
+        </TvlProvider>
       </body>
     </html>
   );
