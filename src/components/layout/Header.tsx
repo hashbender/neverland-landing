@@ -279,6 +279,22 @@ export default function Header() {
                 className='h-[auto] w-[20px] text-white invert'
               />
             </Link>
+
+            {/* Medium Icon */}
+            <Link
+              href='https://docs.neverland.money/'
+              target='_blank noreferrer noopener'
+              className='flex items-center rounded-full border border-white/20 p-2 transition-colors hover:border-purple-400'
+            >
+              <Image
+                loading='eager'
+                src='/assets/images/header/docs.svg'
+                alt='Docs'
+                width={0}
+                height={0}
+                className='h-[auto] w-[20px] text-white invert'
+              />
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -386,7 +402,7 @@ export default function Header() {
             )}
 
             {/* Mobile Social Links - positioned at the bottom and centered */}
-            <div className='absolute right-0 bottom-12 left-0 flex justify-center gap-7'>
+            <div className='absolute right-0 bottom-12 left-0 flex justify-center gap-5'>
               <Link
                 href='https://x.com/neverland_money'
                 target='_blank noreferrer noopener'
@@ -438,6 +454,20 @@ export default function Header() {
                   loading='eager'
                   src='/assets/images/header/medium.svg'
                   alt='Medium'
+                  width={0}
+                  height={0}
+                  className='h-[auto] w-[24px] text-white invert'
+                />
+              </Link>
+              <Link
+                href='https://docs.neverland.money/'
+                target='_blank noreferrer noopener'
+                className='flex aspect-square h-[60px] w-[60px] flex-shrink-0 items-center justify-center rounded-full border-[1.818px] border-[#942ffe]'
+              >
+                <Image
+                  loading='eager'
+                  src='/assets/images/header/docs.svg'
+                  alt='Docs'
                   width={0}
                   height={0}
                   className='h-[auto] w-[24px] text-white invert'

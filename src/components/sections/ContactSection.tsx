@@ -61,12 +61,12 @@ export default function ContactSection() {
         {/* Legal links */}
         <div className='flex items-center justify-center gap-4 sm:gap-9'>
           <Link
-            href='https://whitepaper.neverland.money'
+            href='https://docs.neverland.money'
             target='_blank'
             rel='noopener noreferrer'
             className='font-merriweather text-sm leading-[110%] font-normal text-white transition-opacity duration-300 hover:opacity-70 lg:text-base'
           >
-            <span className='hidden lg:inline'>Whitepaper</span>
+            <span className='hidden lg:inline'>Documentation</span>
             <span className='lg:hidden'>Docs</span>
           </Link>
           <Link
