@@ -4,19 +4,21 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 import { BlurredLoadingText } from '@/components/ui/BlurredLoadingText';
-import { useTvlContext, formatTvl } from '@/lib/TvlContext';
+import { formatTvl } from '@/lib/TvlContext';
 import { useUserbaseContext, formatNumber } from '@/lib/UserbaseContext';
 
 export default function LunarCircleSection() {
-  const { data: tvlData, loading: tvlLoading } = useTvlContext();
   const { data, loading } = useUserbaseContext();
   const activeUsers = data?.totalUsers
     ? formatNumber(data.totalUsers)
     : '000,000';
-  const monthlyTransactions = data?.transactionsPerMonth
-    ? formatNumber(data.transactionsPerMonth)
+  const allTimeTransactions = data?.totalTransactions
+    ? formatNumber(data.totalTransactions)
     : '00,000';
-  const tvlValue = tvlData?.tvl ? `$${formatTvl(tvlData.tvl)}` : '$000M';
+  const tvlValue = data?.tvlUsd ? `$${formatTvl(data.tvlUsd)}` : '$000M';
+  const totalRevenueValue = data?.totalRevenueUsd
+    ? `$${formatTvl(data.totalRevenueUsd)}`
+    : '$00.0M';
   return (
     <section
       id='stats'
@@ -55,14 +57,14 @@ export default function LunarCircleSection() {
                 className='flex w-full flex-col items-start gap-2 px-4'
               >
                 <div className='font-cinzel text-3xl leading-[110%] font-normal text-white'>
-                  <BlurredLoadingText text={tvlValue} isLoading={tvlLoading} />
+                  <BlurredLoadingText text={tvlValue} isLoading={loading} />
                 </div>
                 <div className='font-cinzel text-sm leading-[110%] font-normal text-white/60 uppercase'>
                   &#123; TOTAL VALUE LOCKED &#125;
                 </div>
               </motion.div>
 
-              {/* Monthly Transactions - Right aligned */}
+              {/* All Time Transactions - Right aligned */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -72,12 +74,12 @@ export default function LunarCircleSection() {
               >
                 <div className='font-cinzel text-3xl leading-[110%] font-normal text-white'>
                   <BlurredLoadingText
-                    text={monthlyTransactions}
+                    text={allTimeTransactions}
                     isLoading={loading}
                   />
                 </div>
                 <div className='font-cinzel text-sm leading-[110%] font-normal text-white/60 uppercase'>
-                  &#123; MONTHLY TRANSACTIONS &#125;
+                  &#123; ALL TIME TRANSACTIONS &#125;
                 </div>
               </motion.div>
             </div>
@@ -589,10 +591,7 @@ export default function LunarCircleSection() {
                 {/* Total Value Locked */}
                 <div className='flex w-[120px] flex-col items-center gap-2 md:w-[158px] md:items-start md:gap-3'>
                   <div className='font-cinzel mt-[-1px] text-3xl leading-[110%] font-normal text-white md:w-[158px] md:text-left md:text-5xl'>
-                    <BlurredLoadingText
-                      text={tvlValue}
-                      isLoading={tvlLoading}
-                    />
+                    <BlurredLoadingText text={tvlValue} isLoading={loading} />
                   </div>
                   <div className='relative h-8 w-full md:h-10'>
                     <div className='font-cinzel absolute top-0 left-0 h-[16px] w-full text-lg leading-[110%] font-normal text-white/60 uppercase md:h-[18px]'>
@@ -604,11 +603,11 @@ export default function LunarCircleSection() {
                   </div>
                 </div>
 
-                {/* Transactions */}
+                {/* All Time Transactions */}
                 <div className='flex w-[120px] flex-col items-center gap-2 md:w-[158px] md:items-start md:gap-3'>
                   <div className='font-cinzel mt-[-1px] text-3xl leading-[110%] font-normal text-white md:w-[158px] md:text-left md:text-5xl'>
                     <BlurredLoadingText
-                      text={monthlyTransactions}
+                      text={allTimeTransactions}
                       isLoading={loading}
                     />
                   </div>
@@ -617,7 +616,7 @@ export default function LunarCircleSection() {
                       &#123; TRANSACTIONS
                     </div>
                     <div className='font-cinzel absolute top-4 left-2.5 h-4 w-[105px] text-right text-lg leading-[110%] font-normal text-white/60 uppercase md:top-5 md:left-3.5 md:h-5 md:w-[158px]'>
-                      PER MONTH &#125;
+                      ALL TIME &#125;
                     </div>
                   </div>
                 </div>
@@ -631,14 +630,17 @@ export default function LunarCircleSection() {
                 viewport={{ once: true, amount: 1 }}
                 className='mx-auto flex w-full max-w-[460px] items-center justify-between md:max-w-[766px] md:items-start'
               >
-                {/* Monthly Revenue */}
+                {/* Total Revenue */}
                 <div className='flex w-[120px] flex-col items-center gap-2 md:w-[158px] md:items-start md:gap-3'>
                   <div className='font-cinzel mt-[-1px] text-3xl leading-[110%] font-normal text-white md:w-[158px] md:text-left md:text-5xl'>
-                    <BlurredLoadingText text='$00.0M' />
+                    <BlurredLoadingText
+                      text={totalRevenueValue}
+                      isLoading={loading}
+                    />
                   </div>
                   <div className='flex flex-col items-center gap-0 md:relative md:h-10 md:w-full md:items-start'>
                     <div className='font-cinzel text-lg leading-[110%] font-normal text-white/60 uppercase md:absolute md:top-0 md:left-0 md:h-[16px] md:w-[158px]'>
-                      &#123; MONTHLY
+                      &#123; TOTAL
                     </div>
                     <div className='font-cinzel text-lg leading-[110%] font-normal text-white/60 uppercase md:absolute md:top-[16px] md:left-[60px] md:h-[16px] md:w-[158px]'>
                       REVENUE &#125;
