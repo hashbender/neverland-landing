@@ -47,7 +47,7 @@ export default function LunarCircleSection() {
           {/* Mobile: Stats above and below moon layout */}
           <div className='flex h-[800px] flex-col items-center justify-between md:hidden'>
             {/* Stats above moon - each on own row */}
-            <div className='flex w-full max-w-[600px] flex-col items-center gap-6 pt-16'>
+            <div className='relative z-50 flex w-full max-w-[600px] flex-col items-center gap-6 pt-16'>
               {/* Total Value Locked - Left aligned */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -305,7 +305,7 @@ export default function LunarCircleSection() {
             </div>
 
             {/* Stats below moon - each on own row */}
-            <div className='flex w-full max-w-[600px] flex-col items-center gap-6 pb-16'>
+            <div className='relative z-50 flex w-full max-w-[600px] flex-col items-center gap-6 pb-16'>
               {/* Active Users - Left aligned */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -322,7 +322,7 @@ export default function LunarCircleSection() {
                 </div>
               </motion.div>
 
-              {/* Transactions Per Month - Right aligned */}
+              {/* Total Revenue - Right aligned */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -331,10 +331,13 @@ export default function LunarCircleSection() {
                 className='flex w-full flex-col items-end gap-2 px-4'
               >
                 <div className='font-cinzel text-3xl leading-[110%] font-normal text-white'>
-                  <BlurredLoadingText text='00.00M' />
+                  <BlurredLoadingText
+                    text={totalRevenueValue}
+                    isLoading={loading}
+                  />
                 </div>
                 <div className='font-cinzel text-sm leading-[110%] font-normal text-white/60 uppercase'>
-                  &#123; TRANSACTIONS PER MONTH &#125;
+                  &#123; TOTAL REVENUE &#125;
                 </div>
               </motion.div>
             </div>
