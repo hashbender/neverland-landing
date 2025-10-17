@@ -13,18 +13,24 @@ import { extractTotalUserbase, type UserbaseResult } from './userbase';
 
 const GOLDSKY_ENDPOINT =
   'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/testnet-snapshot/1.1.2/gn';
-const GOLDSKY_ENDPOINT_PROTOCOL_STATS =
-  'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/neverland-leaderboard/1.0.6/gn';
+const TVL_ENDPOINT = 'https://testnet.neverland.money/api/neverland/tvl';
 
 // Cache for 5 minutes
 const CACHE_DURATION = 5 * 60 * 1000;
 
-type ProtocolStats = {
-  tvlUsd: string;
-  totalRevenueUsd: string;
-};
+interface TvlData {
+  tvl: string;
+  tvlRaw: number;
+  totalBorrowed: string;
+  totalBorrowedRaw: number;
+  activeReserves: number;
+  totalReserves: number;
+  timestamp: string;
+  chainId: number;
+  market: string;
+}
 
-type CombinedStats = UserbaseResult & Partial<ProtocolStats>;
+type CombinedStats = UserbaseResult & Partial<TvlData>;
 
 interface UserbaseContextType {
   data: CombinedStats | null;
@@ -43,29 +49,15 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<Error | null>(null);
   const lastFetchTime = useRef<number>(0);
 
-  const fetchProtocolStats = async (): Promise<ProtocolStats> => {
-    const res = await fetch(GOLDSKY_ENDPOINT_PROTOCOL_STATS, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        query: `query ProtocolOverview {\n  protocolStats(id: "1") {\n    tvlUsd\n    totalRevenueUsd\n    updatedAt\n  }\n}`,
-      }),
-    });
+  const fetchTvlData = async (): Promise<TvlData> => {
+    const response = await fetch(TVL_ENDPOINT);
 
-    if (!res.ok) {
-      throw new Error(`Protocol stats GraphQL error ${res.status}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch TVL data: ${response.statusText}`);
     }
 
-    const json = await res.json();
-    if (json.errors) {
-      throw new Error(JSON.stringify(json.errors));
-    }
-
-    const stats = json.data?.protocolStats;
-    return {
-      tvlUsd: String(stats?.tvlUsd ?? '0'),
-      totalRevenueUsd: String(stats?.totalRevenueUsd ?? '0'),
-    };
+    const result: TvlData = await response.json();
+    return result;
   };
 
   const fetchData = async (forceRefresh = false) => {
@@ -78,29 +70,30 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      console.log('Fetching userbase and protocol stats from API...');
+      console.log('Fetching userbase and TVL stats from API...');
       setLoading(true);
-      const [userbase, protocol] = await Promise.all([
+      const [userbase, tvlData] = await Promise.all([
         extractTotalUserbase({ endpoint: GOLDSKY_ENDPOINT }),
-        fetchProtocolStats(),
+        fetchTvlData(),
       ]);
 
       console.log('Userbase data fetched successfully:', {
         totalUsers: userbase.totalUsers,
         totalTransactions: userbase.totalTransactions,
       });
-      console.log('Protocol stats fetched successfully:', {
-        tvlUsd: protocol.tvlUsd,
-        totalRevenueUsd: protocol.totalRevenueUsd,
+      console.log('TVL data fetched successfully:', {
+        tvl: tvlData.tvl,
+        totalBorrowed: tvlData.totalBorrowed,
+        activeReserves: tvlData.activeReserves,
       });
 
-      setData({ ...userbase, ...protocol });
+      setData({ ...userbase, ...tvlData });
       setError(null);
       lastFetchTime.current = now;
       // Only stop loading on success
       setLoading(false);
     } catch (err) {
-      console.error('Error fetching userbase:', err);
+      console.error('Error fetching stats:', err);
       setError(err instanceof Error ? err : new Error('Unknown error'));
       // Keep loading=true on error to maintain blur effect
     }

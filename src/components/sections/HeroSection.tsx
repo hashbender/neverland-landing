@@ -13,7 +13,7 @@ export default function HeroSection() {
   const activeUsers = data?.totalUsers
     ? formatNumber(data.totalUsers)
     : '000,000';
-  const tvlValue = data?.tvlUsd ? `$${formatTvl(data.tvlUsd)}` : '$000.00M';
+  const tvlValue = data?.tvl ? `$${formatTvl(data.tvl)}` : '$000.00M';
 
   return (
     <div className='relative flex h-[100vh] max-h-[1000px] min-h-[700px] w-full flex-col overflow-hidden bg-[#01020D] md:max-h-[100vh] md:min-h-[944px]'>
