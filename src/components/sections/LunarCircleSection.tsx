@@ -16,8 +16,8 @@ export default function LunarCircleSection() {
     ? formatNumber(data.totalTransactions)
     : '00,000';
   const tvlValue = data?.tvl ? `$${formatTvl(data.tvl)}` : '$000M';
-  const totalBorrowedValue = data?.totalBorrowed
-    ? `$${formatTvl(data.totalBorrowed)}`
+  const totalRevenueValue = data?.totalRevenueUsd
+    ? `$${formatTvl(data.totalRevenueUsd)}`
     : '$00.0M';
   return (
     <section
@@ -322,7 +322,7 @@ export default function LunarCircleSection() {
                 </div>
               </motion.div>
 
-              {/* Total Borrowed - Right aligned */}
+              {/* Total Revenue - Right aligned */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -332,12 +332,12 @@ export default function LunarCircleSection() {
               >
                 <div className='font-cinzel text-3xl leading-[110%] font-normal text-white'>
                   <BlurredLoadingText
-                    text={totalBorrowedValue}
+                    text={totalRevenueValue}
                     isLoading={loading}
                   />
                 </div>
                 <div className='font-cinzel text-sm leading-[110%] font-normal text-white/60 uppercase'>
-                  &#123; TOTAL BORROWED &#125;
+                  &#123; TOTAL REVENUE &#125;
                 </div>
               </motion.div>
             </div>
@@ -633,11 +633,11 @@ export default function LunarCircleSection() {
                 viewport={{ once: true, amount: 1 }}
                 className='mx-auto flex w-full max-w-[460px] items-center justify-between md:max-w-[766px] md:items-start'
               >
-                {/* Total Borrowed */}
+                {/* Total Revenue */}
                 <div className='flex w-[120px] flex-col items-center gap-2 md:w-[158px] md:items-start md:gap-3'>
                   <div className='font-cinzel mt-[-1px] text-3xl leading-[110%] font-normal text-white md:w-[158px] md:text-left md:text-5xl'>
                     <BlurredLoadingText
-                      text={totalBorrowedValue}
+                      text={totalRevenueValue}
                       isLoading={loading}
                     />
                   </div>
@@ -646,7 +646,7 @@ export default function LunarCircleSection() {
                       &#123; TOTAL
                     </div>
                     <div className='font-cinzel text-lg leading-[110%] font-normal text-white/60 uppercase md:absolute md:top-[16px] md:left-[60px] md:h-[16px] md:w-[158px]'>
-                      BORROWED &#125;
+                      REVENUE &#125;
                     </div>
                   </div>
                 </div>

@@ -13,6 +13,8 @@ import { extractTotalUserbase, type UserbaseResult } from './userbase';
 
 const GOLDSKY_ENDPOINT =
   'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/testnet-snapshot/1.1.2/gn';
+const GOLDSKY_ENDPOINT_PROTOCOL_STATS =
+  'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/neverland-leaderboard/1.0.6/gn';
 const TVL_ENDPOINT = 'https://testnet.neverland.money/api/neverland/tvl';
 
 // Cache for 5 minutes
@@ -30,7 +32,11 @@ interface TvlData {
   market: string;
 }
 
-type CombinedStats = UserbaseResult & Partial<TvlData>;
+type ProtocolStats = {
+  totalRevenueUsd: string;
+};
+
+type CombinedStats = UserbaseResult & Partial<TvlData> & Partial<ProtocolStats>;
 
 interface UserbaseContextType {
   data: CombinedStats | null;
@@ -60,6 +66,30 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
     return result;
   };
 
+  const fetchProtocolStats = async (): Promise<ProtocolStats> => {
+    const res = await fetch(GOLDSKY_ENDPOINT_PROTOCOL_STATS, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        query: `query ProtocolOverview {\n  protocolStats(id: "1") {\n    totalRevenueUsd\n    updatedAt\n  }\n}`,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Protocol stats GraphQL error ${res.status}`);
+    }
+
+    const json = await res.json();
+    if (json.errors) {
+      throw new Error(JSON.stringify(json.errors));
+    }
+
+    const stats = json.data?.protocolStats;
+    return {
+      totalRevenueUsd: String(stats?.totalRevenueUsd ?? '0'),
+    };
+  };
+
   const fetchData = async (forceRefresh = false) => {
     // Check cache
     const now = Date.now();
@@ -70,11 +100,12 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      console.log('Fetching userbase and TVL stats from API...');
+      console.log('Fetching userbase, TVL, and protocol stats from API...');
       setLoading(true);
-      const [userbase, tvlData] = await Promise.all([
+      const [userbase, tvlData, protocolStats] = await Promise.all([
         extractTotalUserbase({ endpoint: GOLDSKY_ENDPOINT }),
         fetchTvlData(),
+        fetchProtocolStats(),
       ]);
 
       console.log('Userbase data fetched successfully:', {
@@ -86,8 +117,11 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
         totalBorrowed: tvlData.totalBorrowed,
         activeReserves: tvlData.activeReserves,
       });
+      console.log('Protocol stats fetched successfully:', {
+        totalRevenueUsd: protocolStats.totalRevenueUsd,
+      });
 
-      setData({ ...userbase, ...tvlData });
+      setData({ ...userbase, ...tvlData, ...protocolStats });
       setError(null);
       lastFetchTime.current = now;
       // Only stop loading on success
