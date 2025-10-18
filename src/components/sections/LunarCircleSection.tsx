@@ -9,8 +9,8 @@ import { useUserbaseContext, formatNumber } from '@/lib/UserbaseContext';
 
 export default function LunarCircleSection() {
   const { data, loading } = useUserbaseContext();
-  const activeUsers = data?.totalUsers
-    ? formatNumber(data.totalUsers)
+  const activeUsers = data?.uniqueUsers
+    ? formatNumber(data.uniqueUsers)
     : '000,000';
   const allTimeTransactions = data?.totalTransactions
     ? formatNumber(data.totalTransactions)

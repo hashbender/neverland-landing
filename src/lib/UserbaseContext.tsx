@@ -9,12 +9,8 @@ import {
   useRef,
 } from 'react';
 
-import { extractTotalUserbase, type UserbaseResult } from './userbase';
-
 const GOLDSKY_ENDPOINT =
-  'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/testnet-snapshot/1.1.2/gn';
-const GOLDSKY_ENDPOINT_PROTOCOL_STATS =
-  'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/neverland-leaderboard/1.0.6/gn';
+  'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/neverland-testnet/1.0.1/gn';
 const TVL_ENDPOINT = 'https://testnet.neverland.money/api/neverland/tvl';
 
 // Cache for 5 minutes
@@ -32,11 +28,13 @@ interface TvlData {
   market: string;
 }
 
-type ProtocolStats = {
+interface ProtocolStats {
   totalRevenueUsd: string;
-};
+  totalTransactions: number;
+  uniqueUsers: number;
+}
 
-type CombinedStats = UserbaseResult & Partial<TvlData> & Partial<ProtocolStats>;
+type CombinedStats = Partial<TvlData> & Partial<ProtocolStats>;
 
 interface UserbaseContextType {
   data: CombinedStats | null;
@@ -67,11 +65,11 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
   };
 
   const fetchProtocolStats = async (): Promise<ProtocolStats> => {
-    const res = await fetch(GOLDSKY_ENDPOINT_PROTOCOL_STATS, {
+    const res = await fetch(GOLDSKY_ENDPOINT, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        query: `query ProtocolOverview {\n  protocolStats(id: "1") {\n    totalRevenueUsd\n    updatedAt\n  }\n}`,
+        query: `query ProtocolOverview {\n  protocolStats(id: "1") {\n    totalRevenueUsd\n    totalTransactions\n    uniqueUsers\n  }\n}`,
       }),
     });
 
@@ -87,6 +85,8 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
     const stats = json.data?.protocolStats;
     return {
       totalRevenueUsd: String(stats?.totalRevenueUsd ?? '0'),
+      totalTransactions: parseInt(stats?.totalTransactions ?? '0'),
+      uniqueUsers: parseInt(stats?.uniqueUsers ?? '0'),
     };
   };
 
@@ -100,18 +100,13 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      console.log('Fetching userbase, TVL, and protocol stats from API...');
+      console.log('Fetching TVL and protocol stats from API...');
       setLoading(true);
-      const [userbase, tvlData, protocolStats] = await Promise.all([
-        extractTotalUserbase({ endpoint: GOLDSKY_ENDPOINT }),
+      const [tvlData, protocolStats] = await Promise.all([
         fetchTvlData(),
         fetchProtocolStats(),
       ]);
 
-      console.log('Userbase data fetched successfully:', {
-        totalUsers: userbase.totalUsers,
-        totalTransactions: userbase.totalTransactions,
-      });
       console.log('TVL data fetched successfully:', {
         tvl: tvlData.tvl,
         totalBorrowed: tvlData.totalBorrowed,
@@ -119,9 +114,11 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
       });
       console.log('Protocol stats fetched successfully:', {
         totalRevenueUsd: protocolStats.totalRevenueUsd,
+        totalTransactions: protocolStats.totalTransactions,
+        uniqueUsers: protocolStats.uniqueUsers,
       });
 
-      setData({ ...userbase, ...tvlData, ...protocolStats });
+      setData({ ...tvlData, ...protocolStats });
       setError(null);
       lastFetchTime.current = now;
       // Only stop loading on success

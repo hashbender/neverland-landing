@@ -10,8 +10,8 @@ import { useUserbaseContext, formatNumber } from '@/lib/UserbaseContext';
 
 export default function HeroSection() {
   const { data, loading } = useUserbaseContext();
-  const activeUsers = data?.totalUsers
-    ? formatNumber(data.totalUsers)
+  const activeUsers = data?.uniqueUsers
+    ? formatNumber(data.uniqueUsers)
     : '000,000';
   const tvlValue = data?.tvl ? `$${formatTvl(data.tvl)}` : '$000.00M';
 
