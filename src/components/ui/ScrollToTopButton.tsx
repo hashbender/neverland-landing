@@ -23,38 +23,24 @@ export default function ScrollToTopButton() {
 
   const scrollToTop = () => {
     setIsScrolling(true);
-    // Debug log to check if lenis is available
-    console.log('Lenis instance:', lenis);
     if (lenis) {
-      // Lenis uses scrollTo with a target element/position and optional config
       try {
-        // First parameter is target (0 for top), second is options
         lenis.scrollTo('top', {
-          duration: 1.5, // Match to your Lenis configuration duration
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Same easing as in SmoothScroll
+          duration: 1.5,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         });
-        console.log('Used lenis.scrollTo with target "top"');
-      } catch (error) {
-        // If the above syntax doesn't work, try alternative APIs
-        console.error('Error with scrollTo:', error);
+      } catch {
         try {
-          // Some Lenis versions use 0 instead of 'top'
           lenis.scrollTo(0, { duration: 1.5 });
-          console.log('Used lenis.scrollTo(0)');
-        } catch (error2) {
-          console.error('Error with alternate scrollTo:', error2);
-          // Final fallback
+        } catch {
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          console.log('Fell back to native scrolling');
         }
       }
     } else {
-      // Fallback to native scrolling if lenis is not available
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
       });
-      console.log('No Lenis instance, used native scrolling');
     }
 
     // Track scroll to top button click

@@ -9,12 +9,8 @@ import {
   useRef,
 } from 'react';
 
-const GOLDSKY_ENDPOINT =
-  process.env.SUBGRAPH_URL ||
-  'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/neverland-testnet/1.0.1/gn';
-const TVL_ENDPOINT =
-  process.env.TVL_ENDPOINT ||
-  'https://testnet.neverland.money/api/neverland/tvl';
+const GOLDSKY_ENDPOINT = `https://api.goldsky.com/api/public/${process.env.NEXT_PUBLIC_SUBGRAPH_PROJECT_ID}/subgraphs/${process.env.NEXT_PUBLIC_SUBGRAPH_NAME}/${process.env.NEXT_PUBLIC_SUBGRAPH_VERSION}/gn`;
+const TVL_ENDPOINT = process.env.NEXT_PUBLIC_TVL_ENDPOINT || '';
 
 // Cache for 5 minutes
 const CACHE_DURATION = 5 * 60 * 1000;
@@ -97,29 +93,16 @@ export function UserbaseProvider({ children }: { children: ReactNode }) {
     // Check cache
     const now = Date.now();
     if (!forceRefresh && data && now - lastFetchTime.current < CACHE_DURATION) {
-      console.log('Using cached userbase data');
       setLoading(false);
       return;
     }
 
     try {
-      console.log('Fetching TVL and protocol stats from API...');
       setLoading(true);
       const [tvlData, protocolStats] = await Promise.all([
         fetchTvlData(),
         fetchProtocolStats(),
       ]);
-
-      console.log('TVL data fetched successfully:', {
-        tvl: tvlData.tvl,
-        totalBorrowed: tvlData.totalBorrowed,
-        activeReserves: tvlData.activeReserves,
-      });
-      console.log('Protocol stats fetched successfully:', {
-        totalRevenueUsd: protocolStats.totalRevenueUsd,
-        totalTransactions: protocolStats.totalTransactions,
-        uniqueUsers: protocolStats.uniqueUsers,
-      });
 
       setData({ ...tvlData, ...protocolStats });
       setError(null);

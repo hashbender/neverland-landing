@@ -9,7 +9,7 @@ import {
   useRef,
 } from 'react';
 
-const TVL_ENDPOINT = 'https://testnet.neverland.money/api/neverland/tvl';
+const TVL_ENDPOINT = process.env.NEXT_PUBLIC_TVL_ENDPOINT || '';
 
 // Cache for 5 minutes
 const CACHE_DURATION = 5 * 60 * 1000;
@@ -45,13 +45,11 @@ export function TvlProvider({ children }: { children: ReactNode }) {
     // Check cache
     const now = Date.now();
     if (!forceRefresh && data && now - lastFetchTime.current < CACHE_DURATION) {
-      console.log('Using cached TVL data');
       setLoading(false);
       return;
     }
 
     try {
-      console.log('Fetching TVL data from API...');
       setLoading(true);
       const response = await fetch(TVL_ENDPOINT);
 
@@ -60,17 +58,11 @@ export function TvlProvider({ children }: { children: ReactNode }) {
       }
 
       const result: TvlData = await response.json();
-      console.log('TVL data fetched successfully:', {
-        tvl: result.tvl,
-        totalBorrowed: result.totalBorrowed,
-        activeReserves: result.activeReserves,
-      });
       setData(result);
       setError(null);
       lastFetchTime.current = now;
       setLoading(false);
     } catch (err) {
-      console.error('Error fetching TVL:', err);
       setError(err instanceof Error ? err : new Error('Unknown error'));
       // Keep loading=true on error to maintain blur effect
     }
