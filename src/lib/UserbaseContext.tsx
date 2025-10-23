@@ -10,8 +10,11 @@ import {
 } from 'react';
 
 const GOLDSKY_ENDPOINT =
+  process.env.SUBGRAPH_URL ||
   'https://api.goldsky.com/api/public/project_cmeewhugja1gz01ukey477115/subgraphs/neverland-testnet/1.0.1/gn';
-const TVL_ENDPOINT = 'https://testnet.neverland.money/api/neverland/tvl';
+const TVL_ENDPOINT =
+  process.env.TVL_ENDPOINT ||
+  'https://testnet.neverland.money/api/neverland/tvl';
 
 // Cache for 5 minutes
 const CACHE_DURATION = 5 * 60 * 1000;
