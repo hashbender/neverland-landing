@@ -72,7 +72,7 @@ export default function NotFound() {
 
               {/* Enter App Button with Stars and Stardust */}
               <Link
-                href='https://testnet.neverland.money/'
+                href='https://app.neverland.money/'
                 target='_blank'
                 rel='noopener noreferrer'
               >

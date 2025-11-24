@@ -141,7 +141,7 @@ export default function HeroSection() {
 
             {/* CTA Button */}
             <Link
-              href='https://testnet.neverland.money/'
+              href='https://app.neverland.money/'
               target='_blank'
               rel='noopener noreferrer'
               className='w-[240px] md:mx-0 md:mr-auto'

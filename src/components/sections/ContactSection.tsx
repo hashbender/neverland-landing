@@ -42,7 +42,7 @@ export default function ContactSection() {
           {/* CTA Button */}
           <FadeInWhenVisible delay={0} y={20}>
             <Link
-              href='https://testnet.neverland.money/'
+              href='https://app.neverland.money/'
               target='_blank'
               rel='noopener noreferrer'
             >
