@@ -6,13 +6,13 @@ import ActionButton from '@/components/ui/ActionButton';
 import StarrySky from '@/components/ui/StarrySky';
 import StatsCard from '@/components/ui/StatsCard';
 import { formatTvl } from '@/lib/TvlContext';
-import { useUserbaseContext, formatNumber } from '@/lib/UserbaseContext';
+import { useUserbaseContext } from '@/lib/UserbaseContext';
 
 export default function HeroSection() {
   const { data, loading } = useUserbaseContext();
-  const activeUsers = data?.uniqueUsers
-    ? formatNumber(data.uniqueUsers)
-    : '000,000';
+  const totalRevenueValue = data?.totalRevenueUsd
+    ? `$${formatTvl(data.totalRevenueUsd)}`
+    : '$00.0M';
   const tvlValue = data?.tvl ? `$${formatTvl(data.tvl)}` : '$000.00M';
 
   return (
@@ -167,11 +167,11 @@ export default function HeroSection() {
           isLoading={loading}
         />
 
-        {/* Active Users Card - Desktop version */}
+        {/* Total Revenue Card - Desktop version */}
         <StatsCard
-          title='Active Users'
-          value={activeUsers}
-          tooltipContent='Number of users interacting with the protocol.'
+          title='Total Revenue'
+          value={totalRevenueValue}
+          tooltipContent='Total protocol revenue generated from fees.'
           className='hidden md:block'
           isLoading={loading}
         />
@@ -187,11 +187,11 @@ export default function HeroSection() {
             isLoading={loading}
           />
 
-          {/* Active Users */}
+          {/* Total Revenue */}
           <StatsCard
-            title='ACTIVE USERS'
-            value={activeUsers}
-            tooltipContent='Number of users interacting with the protocol.'
+            title='TOTAL REVENUE'
+            value={totalRevenueValue}
+            tooltipContent='Total protocol revenue generated from fees.'
             isMobile={true}
             isLoading={loading}
           />
