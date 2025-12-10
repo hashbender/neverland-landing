@@ -306,4 +306,4 @@ This is a source-available license, not an open-source license as defined by the
 - Parallax effects with [React Parallax Tilt](https://www.npmjs.com/package/react-parallax-tilt)
 - Analytics by [Vercel Analytics](https://vercel.com/analytics) and [Speed Insights](https://vercel.com/docs/speed-insights)
 
-Uses Tenki!
+Uses Tenki Autoscale!
