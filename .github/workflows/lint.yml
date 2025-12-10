@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint:
-    runs-on: tenki-standard-large-plus-16c-32g
+    runs-on: tenki-standard-autoscale
 
     steps:
       - uses: actions/checkout@v3
